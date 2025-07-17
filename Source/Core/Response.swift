@@ -116,7 +116,6 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
         \(responseDescription)
         [Network Duration]: \(networkDuration)
         [Serialization Duration]: \(String(format: "%.2f", serializationDuration * 1000))ms
-        [Result]: \(result)
         """
     }
 }
@@ -297,7 +296,6 @@ extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertibl
         [Resume Data]: \(resumeDataDescription)
         [Network Duration]: \(networkDuration)
         [Serialization Duration]: \(String(format: "%.2f", serializationDuration * 1000))ms
-        [Result]: \(result)
         """
     }
 }
