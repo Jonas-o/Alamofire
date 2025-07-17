@@ -109,7 +109,7 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
             """
         } ?? "[Response]: None"
 
-        let networkDuration = metrics.map { "\($0.taskInterval.duration)s" } ?? "None"
+        let networkDuration = metrics.map { "\(String(format: "%.2f", $0.taskInterval.duration * 1000))ms" } ?? "None"
 
         return """
         \(requestDescription)
@@ -286,7 +286,7 @@ extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertibl
 
         let requestDescription = DebugDescription.description(of: urlRequest)
         let responseDescription = response.map(DebugDescription.description(of:)) ?? "[Response]: None"
-        let networkDuration = metrics.map { "\($0.taskInterval.duration)s" } ?? "None"
+        let networkDuration = metrics.map { "\(String(format: "%.2f", $0.taskInterval.duration * 1000))ms" } ?? "None"
         let resumeDataDescription = resumeData.map { "\($0)" } ?? "None"
 
         return """
