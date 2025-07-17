@@ -115,7 +115,7 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
         \(requestDescription)
         \(responseDescription)
         [Network Duration]: \(networkDuration)
-        [Serialization Duration]: \(serializationDuration)s
+        [Serialization Duration]: \(String(format: "%.2f", serializationDuration * 1000))ms
         [Result]: \(result)
         """
     }
@@ -296,7 +296,7 @@ extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertibl
         [File URL]: \(fileURL?.path ?? "None")
         [Resume Data]: \(resumeDataDescription)
         [Network Duration]: \(networkDuration)
-        [Serialization Duration]: \(serializationDuration)s
+        [Serialization Duration]: \(String(format: "%.2f", serializationDuration * 1000))ms
         [Result]: \(result)
         """
     }
@@ -436,9 +436,19 @@ private enum DebugDescription {
             printableTypes.compactMap({ headers["Content-Type"]?.contains($0) }).contains(true)
         else { return "[Body]: \(data.count) bytes" }
 
+        var resData = data
+        if #available(iOSApplicationExtension 11.0, *) {
+            if ["json"].compactMap({ headers["Content-Type"]?.contains($0) }).contains(true),
+               let object = try? JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed]),
+               let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]) {
+                resData = data
+            }
+        }
+        let responseString = String(decoding: resData, as: UTF8.self)
+        
         return """
         [Body]:
-            \(String(decoding: data, as: UTF8.self)
+            \(responseString
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .indentingNewlines())
         """
